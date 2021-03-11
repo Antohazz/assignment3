@@ -10,30 +10,32 @@ import java.util.Date;
 
 public class SavingsAccount extends BankAccount{
 	
-	private final double INTEREST_RATE = 0.01; // Interest rate
+	private double interestRate = 0.01; // Interest rate
 
 	//Sets opening balance
 	SavingsAccount(double openingBalance){
 		super.balance = openingBalance;
 	}
 	
-	SavingsAccount(double balance, double interestRate, Date openDate){
+
+	SavingsAccount(long accNum, double balance, double interestRate, Date openDate){
 		super.balance = balance;
-		super.interestRate = interestRate;
+		this.interestRate = interestRate;
 		super.openDate = openDate;
+		super.accountNumber = accNum;
 	}
 
 	//Interest getter
 	public double getInterestRate() {
-		return INTEREST_RATE;
+		return interestRate;
 	}
 		
-	public static SavingsAccount readFromString(String accountData) throws NumberFormatException, ParseException{
+	public static SavingsAccount readFromString(String accountData) throws ParseException{
 
-		
+		try {
 		int firstCh = 0;
 		int lastCh = accountData.indexOf(",");
-		int accNum = Integer.parseInt(accountData.substring(firstCh, lastCh));
+		long accNum = Integer.parseInt(accountData.substring(firstCh, lastCh));
 		
 		firstCh = lastCh+1;
 		lastCh = accountData.indexOf(",", firstCh);
@@ -47,18 +49,21 @@ public class SavingsAccount extends BankAccount{
 		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 		Date openDate = df.parse(accountData.substring(firstCh));
 		
-		SavingsAccount savingsAccount = new SavingsAccount(balance, iRate, openDate);
+		SavingsAccount savingsAccount = new SavingsAccount(accNum, balance, iRate, openDate);
 		
 		return savingsAccount;
+	}catch(Exception e){
+		throw new NumberFormatException();
+	}
+		
 	}
 	
 //	// Outputs account info
-//	public String toString() {
-//		String saveAccInfo = "Savings Account Balance: $" + getBalance() + "/n"+
-//				"Savings Account Interest Rate: " + getInterestRate() + "/n"+
-//				"Savings Account Balance in 3 years: $" + futureValue(3);
-//		return saveAccInfo;
-//	}
+	public String toString() {
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		String saveAccInfo = getAccountNumber() + "," + getBalance() + "," + getInterestRate() + "," + df.format(getOpenedOn());
+		return saveAccInfo;
+	}
 	
 	
 }

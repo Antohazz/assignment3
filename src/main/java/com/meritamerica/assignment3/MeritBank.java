@@ -2,10 +2,10 @@ package com.meritamerica.assignment3;
 
 import java.lang.*;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
-
+import java.io.PrintWriter;
 import java.util.*;
 
 public class MeritBank {
@@ -91,12 +91,35 @@ public class MeritBank {
 // Write DATABASE to FILE
 	static boolean writeToFile(String fileName) {
 		
+		String outp = getNextAccountNumber() + "\n";
+		
+		for (int i = 0; i < cdOfferings.length; i++) {
+			if (cdOfferings[i] != null) {
+				outp += cdOfferings[i].toString();
+			}
+		}
+		
+		outp += accountHolders.length + "\n";
+		for (int i = 0; i < accountHolders.length; i++) {
+			if (accountHolders[i] != null) {
+				outp += accountHolders[i].toStringForFile();
+			}
+		}
 		
 		
+		System.out.println(outp);
+		PrintWriter out;
+		try {
+			out = new PrintWriter("BankOutput.txt");
+			out.println(outp);
+			out.close();
+			return true;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		}
 		
 		
-		
-		return false;
 	}
 	
 	static AccountHolder[] sortAccountHolders() {

@@ -5,7 +5,7 @@ public class MeritAmericaBankApp {
 		
 		System.out.println("Hello Merit America!");
 		MeritBank.readFromFile("src/test/testMeritBank_good.txt");
-
+		MeritBank.writeToFile("src/test/testMeritBank_good.txt");
 		
 	}
 }

@@ -2,6 +2,7 @@ package com.meritamerica.assignment3;
 
 
 
+import java.text.ParseException;
 import java.util.Arrays;
 
 /* AccountHolder class for MeritAmericaBankApp.
@@ -15,8 +16,6 @@ public class AccountHolder implements Comparable<AccountHolder>{
 	private String middleName;
 	private String lastName;
 	private String ssn;
-	private CheckingAccount checkingAccount;
-	private SavingsAccount savingsAccount;
 	private CheckingAccount[] checkArray = new CheckingAccount[1];
 	private SavingsAccount[] saveArray = new SavingsAccount[1];
 	private CDAccount[] cdArray = new CDAccount[1];
@@ -44,8 +43,8 @@ public class AccountHolder implements Comparable<AccountHolder>{
 		this.middleName = middleName;
 		this.lastName = lastName;
 		this.ssn = ssn;
-		checkingAccount = new CheckingAccount(checkingAccountOpeningBalance);
-		savingsAccount = new SavingsAccount(savingsAccountOpeningBalance);
+		new CheckingAccount(checkingAccountOpeningBalance);
+		new SavingsAccount(savingsAccountOpeningBalance);
 
 	}
 
@@ -53,7 +52,7 @@ public class AccountHolder implements Comparable<AccountHolder>{
 	
 //READ ACCOUNT HOLDER INFO from FILE
 	public static AccountHolder readFromString(String accountHolderData) throws Exception {
-		
+		try {
 		int firstCh = 0;
 		int lastCh = accountHolderData.indexOf(",");
 		//First name
@@ -72,6 +71,9 @@ public class AccountHolder implements Comparable<AccountHolder>{
 		AccountHolder accountHolder = new AccountHolder(fn, mn, ln, sn);
 		
 		return accountHolder;
+		}catch(Exception e){
+			throw e;
+		}
 	}
 
 	
@@ -318,7 +320,52 @@ public class AccountHolder implements Comparable<AccountHolder>{
 		return getCDBalance() + getSavingsBalance() + getCheckingBalance();
 	}
 
-
+	public String toStringForFile() {
+		
+		int n = 0;
+		for (int i = 0; i < getCheckingAccounts().length; i++) {
+		if (getCheckingAccounts()[i] != null) {
+			n++;
+			}
+		}
+		String accountInfo = getFirstName() + "," + getMiddleName() + "," + getLastName() + "," + getSSN() + "\n" +
+				n + "\n";
+		for (int i = 0; i < getCheckingAccounts().length; i++) {
+			if (getCheckingAccounts()[i] != null) {
+				accountInfo += getCheckingAccounts()[i].toString() + "\n";
+			}
+		}
+		
+		n = 0;
+		for (int i = 0; i < getSavingsAccounts().length; i++) {
+		if (getSavingsAccounts()[i] != null) {
+			n++;
+			}
+		}
+		accountInfo += n + "\n";
+		
+		for (int i = 0; i < getSavingsAccounts().length; i++) {
+			if (getSavingsAccounts()[i] != null) {
+				accountInfo += getSavingsAccounts()[i].toString() + "\n";
+			}
+		}
+		
+		n = 0;
+		for (int i = 0; i < getCDAccounts().length; i++) {
+		if (getCDAccounts()[i] != null) {
+			n++;
+			}
+		}
+		accountInfo += n + "\n";
+		
+		for (int i = 0; i < getCDAccounts().length; i++) {
+			if (getCDAccounts()[i] != null) {
+				accountInfo += getCDAccounts()[i].toString() + "\n";
+			}
+		}
+		
+		return accountInfo;	
+		}
 
 //	 OUTPUT
 //	 Outputs account info

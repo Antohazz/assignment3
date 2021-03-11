@@ -1,8 +1,5 @@
 package com.meritamerica.assignment3;
 
-
-
-
 public class CDOffering {
 
 	private double interestRate;
@@ -16,6 +13,7 @@ public class CDOffering {
 	}
 	
 	public static CDOffering readFromString(String cdOfferingDataString) throws NumberFormatException {
+		try {
 		int firstCh = 0;
 		int lastCh = cdOfferingDataString.indexOf(",");
 		int t = Integer.parseInt(cdOfferingDataString.substring(firstCh, lastCh));
@@ -23,6 +21,9 @@ public class CDOffering {
 		double ir = Double.parseDouble(cdOfferingDataString.substring(firstCh));
 		CDOffering offering = new CDOffering(t, ir);
 		return offering;
+		}catch(Exception e){
+			throw new NumberFormatException();
+		}
 	}
 	
 	
@@ -38,8 +39,7 @@ public class CDOffering {
 	
 //	// Outputs account info
 	public String toString() {
-		String info = "CD offer Interest Rate: " + getInterestRate() + "/n"+
-					"CD offer term years: "+ getTerm();
+		String info = getTerm()+ "," + getInterestRate() + "\n";
 			
 		return info;
 	}

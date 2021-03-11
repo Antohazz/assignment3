@@ -9,8 +9,6 @@ import java.util.Date;
 
 public class CDAccount extends BankAccount{
 	
-	int term;
-
 	
 	public CDAccount(CDOffering offering, double balance) {
 		super.offering = offering;
@@ -18,11 +16,12 @@ public class CDAccount extends BankAccount{
 		super.accountNumber = MeritBank.getNextAccountNumber();
 	}
 	
-	public CDAccount(double balance, double interestRate, Date date, int term) {
+	
+	public CDAccount(long accNum, double balance, CDOffering offering, Date date) {
 		super.balance = balance;
-		super.interestRate = interestRate;
-		this.term = term;
+		super.offering = offering;
 		super.openDate = date;
+		super.accountNumber = accNum;
 		
 	}
 	
@@ -51,12 +50,12 @@ public class CDAccount extends BankAccount{
 	}
 	
 
-	public static CDAccount readFromString(String accountData) throws NumberFormatException, ParseException{
+	public static CDAccount readFromString(String accountData) throws NumberFormatException{
 
-		
+		try {
 		int firstCh = 0;
 		int lastCh = accountData.indexOf(",");
-		int accNum = Integer.parseInt(accountData.substring(firstCh, lastCh));
+		long accNum = Integer.parseInt(accountData.substring(firstCh, lastCh));
 		
 		firstCh = lastCh+1;
 		lastCh = accountData.indexOf(",", firstCh);
@@ -74,9 +73,14 @@ public class CDAccount extends BankAccount{
 		firstCh = lastCh+1;
 		int term = Integer.parseInt(accountData.substring(firstCh));
 		
-		CDAccount cdAccount = new CDAccount(balance, iRate, openDate, term);
+		CDOffering of = new CDOffering(term, iRate);
+		
+		CDAccount cdAccount = new CDAccount(accNum, balance, of, openDate);
 		
 		return cdAccount;
+	}catch(Exception e){
+		throw new NumberFormatException();
+	}
 	}
 	
 	
@@ -89,10 +93,8 @@ public class CDAccount extends BankAccount{
 	
 //	// Outputs account info
 	public String toString() {
-		String cdAccInfo = "CD Account Balance: $" + getBalance() + "/n"+
-				"CD Account Interest Rate: " + getInterestRate() + "/n"+
-				"CD Account Balance in 3 years: $" + futureValue(3) + "/n"+
-				"CD Account term years: "+ getTerm();
+		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+		String cdAccInfo = getAccountNumber() + "," + getBalance() + "," + getInterestRate() + "," + df.format(getOpenedOn()) + "," + getTerm();
 			
 		return cdAccInfo;
 	}
